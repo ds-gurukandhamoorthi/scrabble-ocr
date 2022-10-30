@@ -34,11 +34,13 @@ scrabble_text = np.zeros((15, 15), dtype='U1')
 for row in range(15):
     for col in range(15):
         sim = structural_similarity(empty_as_tiled[col][row], game_as_tiled[col][row], win_size=3)
-        if sim > 0.93:
+        if sim > 0.90:
             scrabble_text[row][col] = ' '
         else:
             tile = game_as_tiled[col][row]
             dist_letters = [ (mean_squared_error(tile, letter_images[ltr]), ltr) for ltr in letter_images.keys()]
+            # In case the empirically found threshold is wrong... We compare with the tile in the empty board along with letters
+            dist_letters.append((mean_squared_error(tile, empty_as_tiled[col][row]), ' '))
             probab_letter = min(dist_letters)[1]
             scrabble_text[row][col] = probab_letter
 
